@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataUSA API Example</title>
+</head>
+<body>
+
+<!-- Container to display API data as a table -->
+<div id="tableContainer"></div>
+
+<script>
+    // Make API request
+    fetch('https://datausa.io/api/data?drilldowns=Nation&measures=Population')
+        .then(response => response.json())
+        .then(data => displayData(data))
+        .catch(error => console.error('Error fetching data:', error));
+
+    function displayData(apiData) {
+        // Extract relevant information from the API response
+        const headers = apiData.headers.map(header => header.name);
+        const rows = apiData.data.map(row => row.map(String));
+
+        // Create a table element
+        const table = document.createElement('table');
+        table.border = '1';
+
+        // Create header row
+        const headerRow = table.insertRow();
+        headers.forEach(headerText => {
+            const headerCell = document.createElement('th');
+            headerCell.textContent = headerText;
+            headerRow.appendChild(headerCell);
+        });
+
+        // Create data rows
+        rows.forEach(rowData => {
+            const row = table.insertRow();
+            rowData.forEach(cellData => {
+                const cell = row.insertCell();
+                cell.textContent = cellData;
+            });
+        });
+
+        // Append the table to the container in the DOM
+        document.getElementById('tableContainer').appendChild(table);
+    }
+</script>
+
+</body>
+</html>
